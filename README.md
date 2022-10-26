@@ -44,17 +44,17 @@ conda install numpy matplotlib tqdm imageio
 Then follow the official [INSTALL.md](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) to install [pytorch3d](https://pytorch3d.org/).
 
 ## Reproduce
-You can train the model on NeRF synthetic dataset within 3 minutes.
+You can train the model on NeRF synthetic dataset within 3 minutes. Here datadir is the dataset folder path. Dataname is the scene name. Basedir is the log folder path. Data_r is the ratio between the used point number and the initialized point number. Splatting_r is the radius for the splatting.
 ```bash
-python main.py --datadir xxx --dataname hotdog --basedir xxx
+python main.py --datadir xxx --dataname hotdog --basedir xxx --data_r 0.012 --splatting_r 0.015
 ```
-After around three minutes, you can see the following output:
+After around three minutes, you can see the following output (the example is tested on one A100 GPU):
 
 ```
-Trainig time:
-Rendering quality:
-Rendering speed:
-Model size:
+Training time: 148.59 s
+Rendering quality: 34.70 dB
+Rendering speed: 120.01 fps
+Model size: 7.32 MB
 ```
 
 ## Citation
