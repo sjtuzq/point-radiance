@@ -120,6 +120,19 @@ class Trainder(object):
             self.logfile.flush()
             return psnr_e
 
+    def get_fps_modelsize(self):
+        start_time = time.time()
+        for id in (range(0, 138)):
+            images = self.model(id)
+        end_time = time.time()
+        fps = 138 / (end_time - start_time)
+        model_path = os.path.join(
+                 self.weightpath,'model_{}.pth'.format(self.dataname))
+        model_size = os.path.getsize(model_path)
+        model_size = model_size / float(1024 * 1024)
+        model_size = round(model_size, 2)
+        return fps,model_size
+
 
 def solve(args):
     trainer = Trainder(args)
@@ -132,9 +145,15 @@ def solve(args):
         trainer.model.repeat_pts()
         trainer.set_optimizer(args.lr1, args.lr2)
         trainer.train()
-    trainer.logfile.write('Total Training Time: {:.2f}s\n'.format(trainer.training_time))
+    trainer.logfile.write('Total Training Time: '
+                  '{:.2f}s\n'.format(trainer.training_time))
     trainer.logfile.flush()
-    trainer.test(115, 138, True)
+    psnr_e = trainer.test(115, 138, True)
+    fps,model_size = trainer.get_fps_modelsize()
+    print('Training time: {:.2f} s'.format(trainer.training_time))
+    print('Rendering quality: {:.2f} dB'.format(psnr_e))
+    print('Rendering speed: {:.2f} fps'.format(fps))
+    print('Model size: {:.2f} MB'.format(model_size))
 
 
 if __name__ == '__main__':
@@ -144,5 +163,3 @@ if __name__ == '__main__':
     dataset = Data(args)
     args.memitem = dataset.genpc()
     solve(args)
-
-
